@@ -3,7 +3,6 @@ server:
 spring:
   application:
     name: eureka
-    #123
 eureka:
   client:
     service-url:

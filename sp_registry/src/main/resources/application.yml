@@ -3,7 +3,9 @@ server:
 spring:
   application:
     name: eureka
+    #123
 eureka:
   client:
     service-url:
       defaultZone: http://127.0.0.1:10086/eureka
+

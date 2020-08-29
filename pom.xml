@@ -6,6 +6,7 @@
         <module>sp_registry</module>
         <module>sp_gateway</module>
         <module>sp_items</module>
+        <module>sp_common</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

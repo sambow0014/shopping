@@ -1,14 +1,14 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   application:
-    name: SP_Item_Service
+    name: item-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: root
-    url: jdbc:mysql:///yun6
+    url: jdbc:mysql:///shopping?serverTimezone=Asia/Shanghai
 
 eureka:
   client:
@@ -16,6 +16,6 @@ eureka:
       defaultZone: http://127.0.0.1:10086/eureka
   instance:
     prefer-ip-address: true
-    instance-id: 192.168.1.4:8081
+    instance-id: 180.208.42.83:8082
 
 

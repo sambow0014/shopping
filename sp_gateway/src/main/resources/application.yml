@@ -7,7 +7,7 @@ eureka:
     registry-fetch-interval-seconds: 30
   instance:
     prefer-ip-address: true
-    instance-id: 192.168.1.4:10010
+    instance-id: 180.208.42.83:10010
 spring:
   application:
     name: zuul-service
@@ -16,6 +16,9 @@ zuul:
   prefix: /api
   routes:
     item-service: /item/**
+  host:
+    socket-timeout-millis: 60000
+    connect-timeout-millis: 60000
 #zuul:
 #  routes:
 #    user-service: /user-service/**
@@ -28,10 +31,10 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 5000
+            timeoutInMilliseconds: 60000
 #负载均衡
 ribbon:
-  ConnectionTimeout: 1000  #ribbon链接的超时时长
+  ConnectTimeout: 1000  #ribbon链接的超时时长
   ReadTimeout: 3500  #ribbon读取超时时长
   MaxAutoRetries: 0  #当前服务重试次数
   MaxAutoRetriesNextServer: 0  #切换服务重试次数

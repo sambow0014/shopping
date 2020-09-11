@@ -24,4 +24,7 @@ public class CategoryService {
         }
         return list;
     }
+    public void addCategory(Category category){
+        categoryMapper.insert(category);
+    }
 }

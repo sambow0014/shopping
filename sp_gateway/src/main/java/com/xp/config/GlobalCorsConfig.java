@@ -12,8 +12,8 @@ public class GlobalCorsConfig {
     public CorsFilter corsFilter(){
         //1.添加CORS配置信息
         CorsConfiguration config=new CorsConfiguration();
-        //2.允许的域地址
-        config.addAllowedOrigin("http://manage.shopping.com:85");
+        //2.允许的域地址，写成*可能会导致cookie无法使用
+        config.addAllowedOrigin("*");
         //3.是否发送Cookie信息
         config.setAllowCredentials(true);
         //4.允许的请求方式

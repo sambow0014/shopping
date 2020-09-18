@@ -19,3 +19,6 @@ eureka:
     instance-id: 180.208.42.83:8082
 
 
+#mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

@@ -14,5 +14,5 @@ public class Brand {
     private Long id;
     private String name;
     private String image;
-    private char letter;
+    private String letter;
 }

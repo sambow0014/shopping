@@ -2,13 +2,12 @@ package com.xp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
-//启动注册中心
-@EnableEurekaServer
 @SpringBootApplication
-public class spRegistryApplication {
+@EnableDiscoveryClient
+public class UploadApplication {
     public static void main(String[] args) {
-        SpringApplication.run(spRegistryApplication.class);
+        SpringApplication.run(UploadApplication.class);
     }
 }

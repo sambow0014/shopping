@@ -16,9 +16,14 @@ zuul:
   prefix: /api
   routes:
     item-service: /item/**
+    upload-service:
+      path: /upload/**
+      serviceId: upload-service
+      strip-prefix: false
   host:
     socket-timeout-millis: 60000
     connect-timeout-millis: 60000
+
 #zuul:
 #  routes:
 #    user-service: /user-service/**

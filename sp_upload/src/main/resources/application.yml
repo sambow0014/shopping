@@ -12,3 +12,19 @@ eureka:
     prefer-ip-address: true
 
 
+fdfs:
+  so-timeout: 1501
+  network_timeout: 600
+  connect-timeout: 600
+  thumb-image:             #缩略图生成参数
+    width: 60
+    height: 60
+  tracker-list:            #TrackerList参数,支持多个
+    - 180.208.32.188:22122
+    #- 192.168.1.106:22122
+sp:
+  upload:
+    baseUrl: "http://image.shopping.com:85/"
+    allowTypes:
+      - image/png
+      - image/jpg

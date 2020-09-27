@@ -22,4 +22,5 @@ public class UploadController {
         String url=uploadService.uploadImage(file);
         return ResponseEntity.ok(url);
     }
+
 }

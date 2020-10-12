@@ -93,7 +93,7 @@ public class GoodsService {
         //新增detail
         SPUDetail spuDetail = spu.getSpuDetail();
         spuDetail.setSpuId(spu.getId());
-        spuDetail.getSpecifications();
+        spuDetail.getGenericSpec();
         detailMapper.insert(spuDetail);
         //定义库存集合
         List<Stock> stocks=new ArrayList<>();
@@ -115,8 +115,137 @@ public class GoodsService {
            stocks.add(stock);
         }
         count = stockMapper.insertList(stocks);
-        if (count!= 1){
+        if (count!= stocks.size()){
             throw new SPException(ExceptionEnum.GOODS_SAVE_ERROR);
         }
     }
+
+
+    private void saveSkuAndStock(SPU spu) {
+        int count;//新增sku
+        List<SKU> skus = spu.getSkus();
+        List<Stock> stockList = new ArrayList<>();
+        for (SKU sku : skus) {
+            sku.setId(null);
+            sku.setCreateTime(new Date());
+            sku.setLastUpdateTime(sku.getCreateTime());
+            sku.setSpuId(spu.getId());
+
+            count = skuMapper.insert(sku);
+            if(count!=1)
+                throw new SPException(ExceptionEnum.GOODS_SAVE_ERROR);
+
+            //新增库存
+            Stock stock = new Stock();
+            stock.setSkuId(sku.getId());
+            stock.setStock(sku.getStock());
+            stockList.add(stock);
+        }
+        //批量新增库存
+        count = stockMapper.insertList(stockList);
+        if(count!=stockList.size())
+            throw new SPException(ExceptionEnum.GOODS_SAVE_ERROR);
+    }
+
+
+
+    /**
+     * 更新商品信息
+     * @param spu
+     */
+    public void updateGoods(SPU spu) {
+        if (spu.getId() == null)
+            throw new SPException(ExceptionEnum.GOODS_UPDATE_ERROR);
+        SKU sku = new SKU();
+        sku.setSpuId(spu.getId());
+        //查询sku
+        List<SKU> skuList = skuMapper.select(sku);
+        if (!CollectionUtils.isEmpty(skuList)) {
+            //删除sku
+            skuMapper.delete(sku);
+            //删除库存
+            List<Long> ids = skuList.stream().map(SKU::getId).collect(Collectors.toList());
+            stockMapper.deleteByIdList(ids);
+        }
+        //新增sku和库存
+        saveSkuAndStock(spu);
+
+        //修改spu
+        spu.setValid(null);
+        spu.setSaleable(null);
+        spu.setCreateTime(null);
+        spu.setLastUpdateTime(new Date());
+
+        int count = spuMapper.updateByPrimaryKeySelective(spu);
+        if (count != 1)
+            throw new SPException(ExceptionEnum.GOODS_UPDATE_ERROR);
+        //修改detail
+        detailMapper.updateByPrimaryKeySelective(spu.getSpuDetail());
+        if (count != 1)
+            throw new SPException(ExceptionEnum.GOODS_UPDATE_ERROR);
+
+
+    }
+
+
+
+    public SPUDetail findDetailById(Long spuId) {
+        SPUDetail spuDetail = detailMapper.selectByPrimaryKey(spuId);
+        if (spuDetail == null){
+            throw new SPException(ExceptionEnum.GOODS_DETAIL_NOT_FOUND);
+        }
+        return spuDetail;
+    }
+
+
+    public List<SKU> findSkuBySpuId(Long spuId) {
+        //查询sku
+        SKU sku = new SKU();
+        sku.setSpuId(spuId);
+        List<SKU> skuList = skuMapper.select(sku);
+        if(CollectionUtils.isEmpty(skuList))
+            throw new SPException(ExceptionEnum.GOODS_SKU_NOT_FOUND);
+
+        //查询库存
+        List<Long> ids = skuList.stream().map(SKU::getId).collect(Collectors.toList());
+        List<Stock> stockList = stockMapper.selectByIdList(ids);
+        if(CollectionUtils.isEmpty(stockList))
+            throw new SPException(ExceptionEnum.GOODS_SKU_NOT_FOUND);
+
+        //把stock变成一个map，其key：skuId,值：库存值
+        Map<Long, Integer> stockMap = stockList.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
+        skuList.forEach(s ->s.setStock(stockMap.get(s.getId())));
+        return skuList;
+    }
+
+//    public List<SKU> findSkuBySpuId(Long spuId) {
+//        //查询SKU
+//        SKU sku=new SKU();
+//        sku.setSpuId(spuId);
+//        List<SKU> skuList = skuMapper.select(sku);
+//        if (CollectionUtils.isEmpty(skuList))
+//        {
+//            throw new SPException(ExceptionEnum.GOODS_SKU_NOT_FOUND);
+//        }
+//        //查询库存
+////        for (SKU s : skus) {
+////            Stock stock = stockMapper.selectByPrimaryKey(s.getId());
+////            if (stock==null){
+////                throw new SPException(ExceptionEnum.GOODS_STOCK_NOT_FOUND);
+////            }
+////            s.setStock(stock.getStock());
+////        }
+//
+//        //库存查询
+//        List<Long> ids = skuList.stream().map(SKU::getId).collect(Collectors.toList());
+//        List<Stock> stockList = stockMapper.selectByIdList(ids);
+//        if (CollectionUtils.isEmpty(stockList)) {
+//            throw new SPException(ExceptionEnum.GOODS_STOCK_NOT_FOUND);
+//        }
+//        //把stock变成一个map，其key是:sku的id，值是库存值
+//        Map<Long, Integer> stockMap = stockList.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
+//        skuList.forEach(s -> s.setStock(stockMap.get(s.getId())));
+//        return skuList;
+//    }
+
 }

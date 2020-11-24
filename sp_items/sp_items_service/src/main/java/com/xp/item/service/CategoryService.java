@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -36,5 +37,11 @@ public class CategoryService {
             throw new SPException(ExceptionEnum.CATEGORY_NOT_FOND);
         }
         return categories;
+    }
+
+
+    public List<String> findNamesByIds(List<Long> ids) {
+        List<Category> categories = categoryMapper.selectByIdList(ids);
+        return categories.stream().map(Category::getName).collect(Collectors.toList());
     }
 }

@@ -8,6 +8,7 @@
         <module>sp_items</module>
         <module>sp_common</module>
         <module>sp_upload</module>
+        <module>sp_elasticsearchs</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -52,12 +53,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 

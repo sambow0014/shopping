@@ -1,0 +1,16 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: search-service
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+    instance:
+      prefer-ip-address: true
+      instance-id: 180.208.42.83:8084
+    registry-fetch-interval-seconds: 10 #拉取服务的时间
+  instance:
+    lease-renewal-interval-in-seconds: 5 # 每隔5秒发送一次心跳
+    lease-expiration-duration-in-seconds: 10 # 10秒不发送就过期

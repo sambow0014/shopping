@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +34,10 @@ public class SpecificationController {
     }
 
     /**
-     * 查询参数集合
+     * 根据条件查询规格参数
      * @param gid
      * @param cid
+     * @param generic
      * @param searching
      * @return
      */
@@ -43,7 +45,15 @@ public class SpecificationController {
     public ResponseEntity<List<SpecParam>> findParamList(
             @RequestParam(value = "gid",required = false) Long gid,
             @RequestParam(value = "cid",required = false) Long cid,
+            @RequestParam(value = "generic",required = false)Boolean generic,
             @RequestParam(value = "searching",required = false) Boolean searching){
-        return ResponseEntity.ok(specificationService.findParamList(gid,cid,searching));
+        List<SpecParam> paramList = specificationService.findParamList(gid, cid, generic, searching);
+        if (CollectionUtils.isEmpty(paramList)){
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            return ResponseEntity.ok(paramList);
+        }
+
     }
 }

@@ -6,6 +6,7 @@ import com.xp.item.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,16 @@ import java.util.List;
 public class BrandController {
     @Autowired
     private BrandService brandService;
+
+    /**
+     * 分页查询品牌
+     * @param key
+     * @param page
+     * @param rows
+     * @param sortBy
+     * @param desc
+     * @return
+     */
     @GetMapping("page")
     public ResponseEntity<PageResult<Brand>> findBrandByPage(
             @RequestParam(value = "key",required = false) String key,
@@ -27,7 +38,7 @@ public class BrandController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Void> saveBrand(Brand brand, @RequestParam("cids")List<Long> cids){
         brandService.saveBrand(brand,cids);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -38,4 +49,19 @@ public class BrandController {
         return ResponseEntity.ok(brandService.findBrandByCategory(cid));
     }
 
+    /**
+     * 根据ID查询品牌
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    public ResponseEntity<Brand>findBrandById(@PathVariable("id")Long id){
+        Brand brand= brandService.findBrandById(id);
+        if (brand==null){
+            return  ResponseEntity.notFound().build();
+        }
+        else {
+            return  ResponseEntity.ok(brand);
+        }
+    }
 }

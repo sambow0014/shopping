@@ -7,6 +7,7 @@ import com.xp.item.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,5 +28,16 @@ public class CategoryController {
     public String addCategory(Category category){
         categoryService.addCategory(category);
         return "redirect:list";
+    }
+    @GetMapping("names")
+    public ResponseEntity<List<String>>findNamesByIds(@RequestParam("ids")List<Long> ids){
+        List<String> names=categoryService.findNamesByIds(ids);
+        if (CollectionUtils.isEmpty(names)){
+
+            return ResponseEntity.notFound().build();
+        }
+        else {
+            return ResponseEntity.ok(names);
+        }
     }
 }

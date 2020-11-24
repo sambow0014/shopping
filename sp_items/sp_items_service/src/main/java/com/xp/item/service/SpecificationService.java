@@ -38,10 +38,11 @@ public class SpecificationService {
         specGroupMapper.insert(specGroup);
     }
 
-    public List<SpecParam> findParamList(Long gid, Long cid, Boolean searching) {
+    public List<SpecParam> findParamList(Long gid, Long cid,Boolean generic , Boolean searching) {
         SpecParam specParam = new SpecParam();
         specParam.setGroupId(gid);
         specParam.setCid(cid);
+        specParam.setGeneric(generic);
         specParam.setSearching(searching);
         List<SpecParam> list = specParamMapper.select(specParam);
         if (CollectionUtils.isEmpty(list)){
